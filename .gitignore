@@ -26,6 +26,7 @@ Recycle.Bin/
 
 # Visual Studio Code
 .vscode/
+.claude/
 
 # PyCharm e outras IDEs JetBrains
 .idea/
@@ -95,3 +96,15 @@ build/
 # Pastas temporárias do Dropbox
 .dropbox.attr
 .dropbox.attrs
+
+
+# Jupyter
+jupyter/config/lab/workspaces/default-37a8.jupyterlab-workspace
+
+# Datasets
+mongodb/datasets/inep/MICRODADOS_CADASTRO_CURSOS_2022_corrigido_UTF8.CSV
+mongodb/datasets/inep/MICRODADOS_CADASTRO_CURSOS_2022_corrigido.CSV
+mongodb/datasets/inep/MICRODADOS_CADASTRO_CURSOS_2022.CSV
+mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022_corrigido_UTF8.csv
+mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022_corrigido.csv
+mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022.CSV
