@@ -26,6 +26,8 @@ USER root
 
 RUN echo "jovyan ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/jovyan
 
+RUN pip install --no-cache-dir pymongo
+
 # Troque para o usuário padrão do Jupyter Docker
 USER jovyan
 
