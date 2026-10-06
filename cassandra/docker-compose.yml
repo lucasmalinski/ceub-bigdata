@@ -7,9 +7,9 @@ services:
       - "9042:9042"
     networks:
       - mybridge
-#    volumes:
-#      - cassandra_data:/var/lib/cassandra
-#      - ./datasets:/datasets
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./datasets:/datasets
 
   cassandra-web:
     image: ipushc/cassandra-web
@@ -36,6 +36,6 @@ networks:
 #    driver: bridge
     external: true
 
-#volumes:
-#  cassandra_data:
-#  datasets:
+volumes:
+ cassandra_data:
+ datasets:
