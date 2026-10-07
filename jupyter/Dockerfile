@@ -28,10 +28,6 @@ RUN echo "jovyan ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/jovyan
 
 RUN pip install --no-cache-dir pymongo
 
-# Baixa o Delta Lake compatível com Spark 3.5.x
-RUN wget --no-check-certificate -q https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.2.1/delta-spark_2.12-3.2.1.jar -P /usr/local/spark/jars/ && \
-    wget --no-check-certificate -q https://repo1.maven.org/maven2/io/delta/delta-storage/3.2.1/delta-storage-3.2.1.jar -P /usr/local/spark/jars/
-
 # Troque para o usuário padrão do Jupyter Docker
 USER jovyan
 
