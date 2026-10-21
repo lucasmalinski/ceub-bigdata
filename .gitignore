@@ -112,6 +112,7 @@ mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022.CSV
 # Labs: configs locais, dados e binarios
 jupyter/config/
 spark/config/
+spark/mc-config/
 minio/minio-data/
 minio/minio-backup/
 spark/mc
