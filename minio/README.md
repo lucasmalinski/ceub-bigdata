@@ -165,6 +165,84 @@ O container executará o serviço principal do MinIO, expondo:
 
 Para iniciar o servidor MinIO no ambiente de prática, utilizaremos o Docker Compose, conforme o padrão estabelecido no projeto:
 
+<!--
+cd /opt/ceub-bigdata/minio/
+git clone https://github.com/minio/minio
+cd minio/
+git checkout RELEASE.2025-10-15T17-29-55Z
+docker build -t myminio/minio:RELEASE.2025-10-15T17-29-55Z .
+
+### 
+version: '3.7'
+
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    container_name: minio
+    restart: unless-stopped
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+
+    volumes:
+      - ./minio-data:/data
+      - ./minio-backup:/backup
+
+    command: server /data --console-address ":9001"
+
+    networks:
+      - mybridge
+
+networks:
+  mybridge:
+    external:
+      name: mybridge
+
+volumes:
+  minio-data:
+  minio-backup:
+
+
+---
+
+
+
+services:
+  minio:
+    image: myminio/minio:RELEASE.2025-10-15T17-29-55Z
+    container_name: minio
+    restart: unless-stopped
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+
+    volumes:
+      - ./minio-data:/data
+      - ./minio-backup:/backup
+
+    command: server /data --console-address ":9001"
+
+    networks:
+      - mybridge
+
+networks:
+  mybridge:
+    external: true
+    name: mybridge
+
+
+-->
+
 ```bash
 cd /opt/ceub-bigdata/minio
 docker-compose up -d
@@ -290,7 +368,7 @@ print("URL temporária:", url)
 
 ### MinIO Client
 
-O `mc` é o utilitário de linha de comando do MinIO. Ele é análogo ao AWS CLI, mas funciona com qualquer serviço compatível com a API S3, incluindo Azure BLOB Storage, Google Cloud Storage e o próprio MinIO. Na VM, baixe com o comando abaixo: 
+O `mc` é o utilitário de linha de comando do MinIO. Ele é análogo ao AWS CLI, mas funciona com qualquer serviço compatível com a API S3, incluindo Azure BLOB Storage, Google Cloud Storage e o próprio MinIO. Na VM, você pode baixá-lo com o comando abaixo: 
 
 ```bash
 wget https://dl.min.io/client/mc/release/linux-amd64/mc
@@ -305,6 +383,18 @@ O primeiro passo é configurar uma conexão para seu servidor MinIO local, por m
 
 ```bash
 mc alias set local http://localhost:9000 minioadmin minioadmin
+```
+
+Se estiver com o Docker Desktop rodando container diretamente em sua máquina, ou mesmo na VM, você também pode usar o container do Spark, que já possui o `mc` instalado. Para isso, entre no terminal do container do Spark: 
+
+```bash
+docker exec -it spark_spark_1 bash
+```
+
+Lembre-se de alterar a conexão para o container do MinIO nesse caso:
+
+```bash
+mc alias set local http://minio:9000 minioadmin minioadmin
 ```
 
 Depois você pode realizar as operações básicas: 
