@@ -108,3 +108,11 @@ mongodb/datasets/inep/MICRODADOS_CADASTRO_CURSOS_2022.CSV
 mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022_corrigido_UTF8.csv
 mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022_corrigido.csv
 mongodb/datasets/inep/MICRODADOS_ED_SUP_IES_2022.CSV
+
+# Labs: configs locais, dados e binarios
+jupyter/config/
+spark/config/
+minio/minio-data/
+minio/minio-backup/
+spark/mc
+.ipynb_checkpoints/
