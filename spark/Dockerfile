@@ -50,6 +50,11 @@ RUN wget --no-check-certificate -q https://repo1.maven.org/maven2/org/apache/ice
     RUN wget --no-check-certificate -q https://github.com/golithus/minio-builds/releases/download/mc-RELEASE.2025-08-13T08-35-41Z/mc-linux-amd64 -O /usr/local/bin/mc && \
     chmod +x /usr/local/bin/mc
 
+# Baixa o Delta Lake compatível com Spark 3.5.x
+RUN wget --no-check-certificate -q https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.2.1/delta-spark_2.12-3.2.1.jar -P /usr/local/spark/jars/ && \
+    wget --no-check-certificate -q https://repo1.maven.org/maven2/io/delta/delta-storage/3.2.1/delta-storage-3.2.1.jar -P /usr/local/spark/jars/
+
+    
 # Define o usuário padrão do Jupyter como root para evitar permissões no Jupyter
 RUN echo "jovyan ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/jovyan
 
