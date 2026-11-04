@@ -122,3 +122,6 @@ spark/mc
 mongodb/datasets/sampledata.archive
 mongodb/datasets/raw/
 spark/data/raw/
+
+# Anotacoes pessoais
+TODO.md
