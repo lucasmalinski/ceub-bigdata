@@ -1,3 +1,66 @@
+## Arquitetura do meu ambiente (fork)
+
+Ambiente montado nativamente no Arch Linux com Docker (sem a VM do VirtualBox). Todos os contêineres compartilham a rede externa `mybridge` e se encontram pelo nome do serviço; as credenciais ficam em arquivos `.env` (fora do git) e são lidas com `os.getenv` nos notebooks.
+
+```mermaid
+flowchart LR
+    subgraph HOST["Host: Arch Linux + Docker"]
+        direction LR
+        VSC["VS Code<br/>notebooks .ipynb"]
+        ENV[".env por pasta<br/>(credenciais fora do git)"]
+    end
+
+    subgraph NET["Rede Docker externa: mybridge"]
+        direction LR
+
+        subgraph SPARK["spark (Jupyter :8889 · Spark UI :4040)"]
+            JUP["Kernel Python + PySpark<br/>delta-spark · boto3 · pymongo · mc"]
+        end
+
+        subgraph MONGO["mongodb"]
+            MDB[("mongo_service :27017<br/>inep.ies · inep.cursos<br/>sample_* (sampledata)")]
+            MEX["mongo-express :8081"]
+        end
+
+        subgraph MINIO["minio (API :9000 · Console :9001)"]
+            DL[("datalake<br/>benchmark de formatos")]
+            BR[("datalake-bronze<br/>mongodb/{banco}/{colecao}.jsonl<br/>tabela Delta f1_2022_results")]
+            SG[("datalake-silver · gold · meta")]
+        end
+
+        subgraph CASS["cassandra"]
+            CDB[("cassandra-container :9042<br/>volume persistente")]
+            CWEB["cassandra-web :3000"]
+        end
+    end
+
+    META["Metabase<br/>(próximo lab)"]
+
+    VSC -->|"kernel remoto :8889"| JUP
+    ENV -.->|"env_file"| JUP
+    JUP -->|"pymongo: AED do Censo IES"| MDB
+    JUP -->|"S3A: CSV/JSON/Parquet/Avro/ORC"| DL
+    JUP -->|"Delta Lake: escrita, MERGE, histórico"| BR
+    JUP -->|"mc cp / boto3"| BR
+    JUP -.-> SG
+    MEX --> MDB
+    CWEB --> CDB
+    MDB -->|"mongoexport → .jsonl → mc cp"| BR
+    BR -.-> META
+```
+
+### Fluxos de dados realizados
+
+| Etapa | Origem | Processamento | Destino |
+|---|---|---|---|
+| Censo da Educação Superior 2022 | CSVs do INEP | `sed` + `iconv` + `mongoimport` | MongoDB `inep.ies` / `inep.cursos` → AED no Jupyter |
+| Benchmark de formatos | `lap_times.csv` | Spark (CSV, JSON, Parquet, Avro, ORC) | MinIO `datalake` |
+| Ingestão Bronze | `sampledata.archive` | `mongorestore` → `mongoexport` (.jsonl) → `mc cp` | MinIO `datalake-bronze/mongodb/...` |
+| Lakehouse | CSVs da F1 | Spark + Delta Lake (Bronze → Silver, MERGE, time travel) | MinIO `datalake-bronze` (tabela Delta) |
+| Banco colunar | CQL | `cqlsh` / cassandra-web | Cassandra (volume persistente) |
+
+---
+
 # Laboratórios da Disciplina
 
 Olá, estudante! Seja bem-vindo aos laboratórios da disciplina de **Fundamentos de Big Data**. Este repositório foi desenvolvido para facilitar a configuração e o gerenciamento das ferramentas que utilizaremos. No cenário atual de Tecnologia da Informação e Comunicação (TIC), enfrentamos o desafio de armazenar e gerenciar quantidades massivas de dados, como os mais de 2,5 quintilhões de bytes gerados diariamente por redes sociais, transações financeiras, sensores IoT e dispositivos conectados à Internet. O conceito de Big Data se desenvolve em resposta a essa demanda, sendo caracterizado não apenas pelo grande **Volume**, mas também pela **Velocidade** com que os dados são gerados e processados, a **Variedade** de formatos e fontes, a **Veracidade** dos dados e, finalmente, o potencial **Valor** que podem agregar quando analisados corretamente. Nesse contexto, as ferramentas de **Big Data** e, também, os sistemas gerenciadores de bancos de dados **NoSQL** (Not-only SQL), emergem como soluções otimizadas para lidar com estas características.
