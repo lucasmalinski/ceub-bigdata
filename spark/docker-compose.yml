@@ -8,6 +8,8 @@ services:
       - "8889:8888"  # IDE Jupyter (Alterando para 8889)
       - "4040:4040"  # Spark UI    (Após inicialização via IDE ou script)
       - "7077:7077"  # Spark API   (Acesso Externo)
+    env_file:
+      - .env         # Credenciais (MINIO_*, MONGO_*), fora do git e do zip
     volumes:
       - ./notebooks:/home/jovyan/work
       - ./data:/home/jovyan/data

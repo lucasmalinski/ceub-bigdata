@@ -117,3 +117,8 @@ minio/minio-data/
 minio/minio-backup/
 spark/mc
 .ipynb_checkpoints/
+
+# Datasets gerados nas praticas (grandes, reproduziveis)
+mongodb/datasets/sampledata.archive
+mongodb/datasets/raw/
+spark/data/raw/

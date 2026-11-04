@@ -5,8 +5,8 @@ services:
     image: mongo:4.4-bionic
     container_name: mongo_service
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongo
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
     ports:
       - "27017:27017"
     volumes:
@@ -20,9 +20,9 @@ services:
     image: mongo-express:latest
     container_name: mongo_express_service
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
-      ME_CONFIG_MONGODB_URL: mongodb://root:mongo@mongo:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${ME_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_PASS}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASS}@mongo:27017/
     ports:
       - "8081:8081"
     networks:
